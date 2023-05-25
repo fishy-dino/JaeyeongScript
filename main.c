@@ -1,7 +1,33 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include "jaeyeong.h"
 
 #define READ_SIZE 512
+
+void replace(char *str, char find, char replace) {
+  while(*str) {
+    if (*str == find) str = replace;
+    str++;
+  }
+}
+
+char** split(char *str, const char *delimiter, int *count) {
+  int bufferSize = 10;
+  int tokenCount = 0;
+  char **tokens = malloc(bufferSize * sizeof(char*));
+  char *token = strtok(str, delimiter);
+   while (token != NULL) {
+    tokens[tokenCount] = token;
+    tokenCount++;
+    if (tokenCount >= bufferSize) {
+      bufferSize += 10;
+      tokens = realloc(tokens, bufferSize * sizeof(char*));
+    }
+    token = strtok(NULL, delimiter);
+  }
+  *count = tokenCount;
+  return tokens;
+}
 
 int main(int argc, char* argv[]) {
   unsigned int size = 0;
@@ -31,6 +57,18 @@ int main(int argc, char* argv[]) {
   }
   if (!buffer) return 1;
 	buffer[length] = '\0';
-  printf("%s\n", buffer);
+
+  replace(buffer, ';', '\n');
+  int tc, last = 0;
+  char **lines = split(buffer, "\n", &tc);
+  for (int i = 0; i < tc; i++)
+    if (lines[i] != '\0') last = 1;
+  if (lines[0] != CODE_START || lines[last] != CODE_END) {
+    printf("Error: Invalid file format\n");
+    if (buffer) free(buffer);
+    if (lines) free(lines);
+    return 1;
+  }
+  free(lines);
   return 0;
 }
