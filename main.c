@@ -1,15 +1,28 @@
+// -*- coding: utf-8 -*-
 #include <stdio.h>
 #include <stdlib.h>
 #include <stdarg.h>
-#include "jaeyeong.h"
+#include <locale.h>
+#include <wchar.h>
+#include <string.h>
+#ifdef __unix__
+  #include <unistd.h>
+#endif
+#include "jaeyeong.c"
 
 #define READ_SIZE 512
 
 int error(const char* format, ...);
 void replace(char *str, char find, char replace);
 char** split(char *str, const char *delimiter, int *count);
+int argv_help(char* argv[], ProgramOption* opt);
 
 int main(int argc, char* argv[]) {
+  int tmp;
+  ProgramOption option;
+  option.version = (Version){0, 1, 0};
+  if ((tmp = argv_help(argv, &option)) == 0) return tmp;
+  if (option.file == NULL) return error("Error: No input file\n");
   unsigned int size = 0, length = 0;
   char *version = "v0.1.0", *buffer = NULL, *fname = NULL;
 	FILE *file = NULL;
@@ -38,6 +51,30 @@ int main(int argc, char* argv[]) {
   }
   free(lines);
   return 0;
+}
+
+int argv_help(char* argv[], ProgramOption* opt) {
+  opt->file = NULL;
+  int index = 0;
+  while (argv[index] != NULL) {
+    char* value = argv[index];
+    if (strcmp(value, "--version") == 0) {
+      char* ver = version(opt->version);
+      printf("jaeyeong v%s\n", ver);
+      free(ver);
+      return 0;
+    } else if (strcmp(value, "--help") == 0) {
+      printf("Usage: %s [options] <filename>\n", argv[0]);
+      printf("Options:\n");
+      printf("  --version\t\tPrint version information\n");
+      printf("  --help\t\tPrint this help message\n");
+      return 0;
+    } else if ((opt->file != NULL) && ends_with(argv[index], ".jaeyeong")) {
+      opt->file = argv[index];
+    }
+    index++;
+  }
+  return 1;
 }
 
 int error(const char* format, ...) {
