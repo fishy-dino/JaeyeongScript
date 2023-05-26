@@ -3,12 +3,6 @@
 #include "value.h"
 typedef struct {
   char* name;
-  ValueType type;
-  union {
-    int int_value;
-    bool bool_value;
-    char* string_value;
-    char char_value;
-  } value;
+  Value value;
 } Variable;
 #endif

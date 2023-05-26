@@ -9,10 +9,10 @@
   #include <unistd.h>
 #endif
 #include "jaeyeong.c"
+#include "error.c"
 
 #define READ_SIZE 512
 
-int error(const char* format, ...);
 void replace(char *str, char find, char replace);
 char** split(char *str, const char *delimiter, int *count);
 int argv_help(char* argv[], ProgramOption* opt);
@@ -74,14 +74,6 @@ int argv_help(char* argv[], ProgramOption* opt) {
     }
     index++;
   }
-  return 1;
-}
-
-int error(const char* format, ...) {
-  va_list args;
-  va_start(args, format);
-  vfprintf(stderr, format, args);
-  va_end(args);
   return 1;
 }
 
