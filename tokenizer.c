@@ -4,6 +4,15 @@
 
 #define TOKLIST_SIZE 20
 
+char* push(char* str, char c) {
+  size_t len = strlen(str);
+  char* newStr = (char*)malloc((len + 2) * sizeof(char));  
+  strcpy(newStr, str);
+  newStr[len] = c;
+  newStr[len + 1] = '\0';
+  return newStr;
+}
+
 int initTokArray(TokenArray* array) {
   array->data = NULL;
   array->size = 0;
@@ -69,27 +78,17 @@ int parse_keyword(char* kw, TokenArray* array) {
   return 0;
 }
 
-int tokenize(char* line, TokenArray* array) {
-  int i = 0;
-  while (keywords[i] != NULL) {
-    if (starts_with(line, keywords[i])) {
-      switch ((Keywords)i) {
-        case SPIT:
-          parse_spit(&line, &array);
-          break;
-        default:
-          break;
-      }
-    }
-  }
+int tokenize(char** line, TokenArray* array) {
+  
 }
 
 int parse_spit(char** line, TokenArray** array) {
 
 }
 
-int tokenizer() {
-  TokenArray array;
-  initTokArray(&array);
+int tokenizer(TokenArray* array) {
+  initTokArray(&(*array));
+  bool is_symbol = false;
+  char* symbol = (char*)malloc(10 * sizeof(char));
   return 0;
 }

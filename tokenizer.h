@@ -8,7 +8,8 @@
 typedef enum {
   TOKEN,
   KEYWORD,
-  VALUE
+  VALUE,
+  SYMBOL
 } TokenTypes;
 
 typedef enum {
@@ -45,6 +46,7 @@ typedef struct {
     Tokens token;
     Keywords keyword;
     Value value;
+    char* symbol;
   } value;
 } Token;
 
